@@ -1,0 +1,265 @@
+ body {
+     margin: 0;
+     padding: 0;
+     font-family: Arial, sans-serif;
+     background: #1a1a1a;
+     overflow: hidden;
+ }
+
+ #video-frame {
+     opacity: 1;
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     z-index: 1;
+     border: none;
+ }
+
+ .controls-overlay {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     z-index: 2;
+     pointer-events: none;
+ }
+
+ button {
+     position: absolute;
+     padding: 8px 16px;
+     background: rgba(255, 255, 255, 0.3);
+     /* Más transparente */
+     border: none;
+     border-radius: 5px;
+     cursor: pointer;
+     font-size: 12px;
+     font-weight: bold;
+     color: #333;
+     transition: all 0.3s ease;
+     pointer-events: auto;
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+     /* Sombra más sutil */
+     opacity: 0.0004;
+     /* Opacidad general reducida */
+ }
+
+ button:hover {
+     background: rgba(255, 255, 255, 0.8);
+     /* Más visible al hacer hover */
+     transform: translateY(-2px);
+     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+     opacity: 0.00001;
+     /* Completamente visible al hacer hover */
+ }
+
+ /* Controles principales en la esquina superior izquierda */
+ #btn-reproducir {
+     top: 30px;
+     left: 260px;
+     background: rgba(74, 144, 226, 0.3);
+     /* Más transparente */
+     color: white;
+     padding: 10px 20px;
+     font-size: 14px;
+ }
+
+ #btn-pausar {
+     top: 30px;
+     left: 600px;
+     background: rgba(255, 193, 7, 0.3);
+     /* Más transparente */
+     color: white;
+ }
+
+ #btn-detener {
+     top: 30px;
+     left: 500px;
+     background: rgba(220, 53, 69, 0.3);
+     /* Más transparente */
+     color: white;
+ }
+
+ /* Controles secundarios en la esquina superior derecha */
+ #btn-configurar {
+     top: 200px;
+     right: 430px;
+     background: rgba(108, 117, 125, 0.3);
+     /* Más transparente */
+     color: white;
+ }
+
+ #btn-compartir {
+     top: 300px;
+     right: 430px;
+     background: rgba(32, 201, 151, 0.3);
+     /* Más transparente */
+     color: white;
+ }
+
+ #btn-favoritos {
+     top: 430px;
+     right: 430px;
+     background: rgba(255, 99, 132, 0.3);
+     /* Más transparente */
+     color: white;
+ }
+
+ /* Controles de navegación en la parte inferior */
+ #btn-ver {
+     bottom: 80px;
+     left: 50%;
+     transform: translateX(-50%);
+     background: rgba(255, 87, 34, 0.4);
+     /* Más transparente */
+     color: white;
+     padding: 12px 24px;
+     font-size: 16px;
+     border-radius: 25px;
+ }
+
+ #btn-buscar {
+     bottom: 20px;
+     left: 20px;
+     background: rgba(156, 39, 176, 0.3);
+     /* Más transparente */
+     color: white;
+ }
+
+ #btn-filtrar {
+     bottom: 20px;
+     left: 120px;
+     background: rgba(63, 81, 181, 0.3);
+     /* Más transparente */
+     color: white;
+ }
+
+ #btn-descargar {
+     bottom: 20px;
+     right: 600px;
+     background: rgba(76, 175, 80, 0.3);
+     /* Más transparente */
+     color: white;
+ }
+
+ /* Efectos especiales para botones principales */
+ #btn-ver:hover {
+     background: rgba(255, 87, 34, 1);
+     transform: translateX(-50%) scale(1.05);
+ }
+
+ #btn-reproducir:hover {
+     background: rgba(74, 144, 226, 1);
+     transform: translateY(-2px) scale(1.05);
+ }
+
+ /* Indicador de estado más discreto */
+ .status-indicator {
+     position: absolute;
+     top: 70px;
+     left: 20px;
+     background: rgba(0, 0, 0, 0.4);
+     /* Más transparente */
+     color: white;
+     padding: 5px 10px;
+     border-radius: 15px;
+     font-size: 12px;
+     z-index: 3;
+     opacity: 0.6;
+     /* Menos visible */
+ }
+
+ /* Estilos para notificaciones */
+ .notification {
+     position: fixed;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+     color: white;
+     padding: 20px 30px;
+     border-radius: 15px;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+     z-index: 1000;
+     font-size: 16px;
+     font-weight: bold;
+     text-align: center;
+     min-width: 300px;
+     opacity: 0;
+     transform: translate(-50%, -50%) scale(0.8);
+     transition: all 0.3s ease;
+ }
+
+ .notification.show {
+     opacity: 1;
+     transform: translate(-50%, -50%) scale(1);
+ }
+
+ .notification-overlay {
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background: rgba(0, 0, 0, 0.5);
+     z-index: 999;
+     opacity: 0;
+     transition: opacity 0.3s ease;
+ }
+
+ .notification-overlay.show {
+     opacity: 1;
+ }
+
+ /* Responsive design */
+ @media (max-width: 768px) {
+     button {
+         font-size: 10px;
+         padding: 6px 12px;
+         opacity: 0.3;
+         /* Aún más transparente en móviles */
+     }
+
+     #btn-reproducir {
+         padding: 8px 16px;
+         font-size: 12px;
+     }
+
+     #btn-ver {
+         padding: 10px 20px;
+         font-size: 14px;
+     }
+
+     #btn-configurar,
+     #btn-compartir,
+     #btn-favoritos {
+         right: 10px;
+         top: 70px;
+     }
+
+     #btn-compartir {
+         right: 90px;
+     }
+
+     #btn-favoritos {
+         right: 170px;
+     }
+ }
+
+ /* Opción para ocultar completamente los controles cuando no se necesiten */
+ .controls-overlay.hidden {
+     opacity: 0;
+     pointer-events: none;
+ }
+
+ /* Auto-hide después de un tiempo de inactividad */
+ .controls-overlay.auto-hide {
+     opacity: 0.2;
+     transition: opacity 0.5s ease;
+ }
+
+ .controls-overlay.auto-hide:hover {
+     opacity: 1;
+ }

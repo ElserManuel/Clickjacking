@@ -3,161 +3,35 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTubeHack</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Reproductor</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+    <iframe src="https://www.cuevana.is" id="video-frame"></iframe>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="header-left">
-            <button class="menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="logo">
-                <i class="fab fa-youtube"></i>
-                <span>YouTubeHack</span>
-            </div>
-        </div>
+    <div class="controls-overlay" id="controls">
+        <div class="status-indicator" id="status">Listo</div>
 
-        <div class="header-center">
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Buscar" class="search-input">
-                <button class="search-btn" onclick="searchVideos()">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
+        <!-- Controles principales -->
+        <button id="btn-reproducir" onclick="reproducir()">▶ Reproducir</button>
+        <button id="btn-pausar" onclick="pausar()">⏸ Pausar</button>
+        <button id="btn-detener" onclick="detener()">⏹ Detener</button>
 
-        <div class="header-right">
-            <button class="icon-btn">
-                <i class="fas fa-video"></i>
-            </button>
-            <button class="icon-btn">
-                <i class="fas fa-bell"></i>
-            </button>
-            <button class="icon-btn">
-                <i class="fas fa-user-circle"></i>
-            </button>
-        </div>
-    </header>
+        <!-- Controles secundarios -->
+        <button id="btn-configurar" onclick="configurar()">⚙️ Config</button>
+        <button id="btn-compartir" onclick="compartir()">📤 Compartir</button>
+        <button id="btn-favoritos" onclick="favoritos()">❤️ Favoritos</button>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-section">
-            <a href="#" class="sidebar-link active">
-                <i class="fas fa-home"></i>
-                <span>Inicio</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <i class="fas fa-compass"></i>
-                <span>Explorar</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <i class="fas fa-play"></i>
-                <span>Shorts</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <i class="fas fa-folder"></i>
-                <span>Suscripciones</span>
-            </a>
-        </div>
+        <!-- Botón principal -->
+        <button id="btn-ver" onclick="verabri()">🎬 Ver Película</button>
 
-        <hr class="sidebar-divider">
-
-        <div class="sidebar-section">
-            <a href="#" class="sidebar-link">
-                <i class="fas fa-history"></i>
-                <span>Historial</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <i class="fas fa-clock"></i>
-                <span>Ver más tarde</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <i class="fas fa-thumbs-up"></i>
-                <span>Videos que me gustan</span>
-            </a>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Category Chips -->
-        <div class="category-chips">
-            <button class="chip active" onclick="loadCategory('music')">Música</button>
-            <button class="chip" onclick="loadCategory('gaming')">Gaming</button>
-            <button class="chip" onclick="loadCategory('sports')">Deportes</button>
-            <button class="chip" onclick="loadCategory('technology')">Tecnología</button>
-            <button class="chip" onclick="loadCategory('cooking')">Cocina</button>
-            <button class="chip" onclick="loadCategory('travel')">Viajes</button>
-        </div>
-
-        <!-- Loading -->
-        <div id="loading" class="loading hidden">
-            <div class="spinner"></div>
-            <p>Cargando videos...</p>
-        </div>
-
-        <!-- Error Message -->
-        <div id="errorMessage" class="error-message hidden">
-            <i class="fas fa-exclamation-triangle"></i>
-            <p>Error al cargar los videos. Por favor, verifica tu API key.</p>
-        </div>
-
-        <!-- Video Grid -->
-        <div id="videoGrid" class="video-grid">
-            <!-- Videos se cargarán aquí -->
-        </div>
-    </main>
-
-    <!-- ANUNCIO -->
-    <div id="announcement" class="announcement hidden">
-        <p>🔥 ¡Estás viendo un video destacado! 🔥</p>
+        <!-- Controles de navegación -->
+        <button id="btn-buscar" onclick="buscar()">🔍 Buscar</button>
+        <button id="btn-filtrar" onclick="filtrar()">🎭 Filtrar</button>
+        <button id="btn-descargar" onclick="descargar()">⬇️ Descargar</button>
     </div>
-
-    <!-- Video Modal -->
-    <div id="videoModal" class="modal hidden">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal()">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="video-player">
-                <iframe id="videoPlayer" frameborder="0" allowfullscreen></iframe>
-            </div>
-            <div class="video-info">
-                <h2 id="modalTitle"></h2>
-                <div class="video-stats">
-                    <span id="modalViews"></span>
-                    <span id="modalDate"></span>
-                </div>
-                <div class="channel-info">
-                    <img id="modalChannelImage" alt="Canal">
-                    <div>
-                        <h3 id="modalChannelName"></h3>
-                        <p id="modalSubscribers"></p>
-                    </div>
-                </div>
-                <div class="video-description">
-                    <p id="modalDescription"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TEST OVERLAY - TU FUNCIONALIDAD PERSONALIZADA -->
-    <div id="testOverlay" class="test-overlay">
-        <button class="test-button" onclick="showTestMessage()">Haz clic para ver el video</button>
-    </div>
-
-    <!-- TEST MESSAGE -->
-    <div id="testMessage" class="test-message hidden">
-        Acaba de aceptar un kilo de virus
-    </div>
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
