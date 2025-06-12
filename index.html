@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demostración Educativa - Clickjacking</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: "🎉";
+            font-size: 50px;
+            position: absolute;
+            top: 10px;
+            left: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        .header::after {
+            content: "🎁";
+            font-size: 50px;
+            position: absolute;
+            top: 10px;
+            right: 30px;
+            animation: bounce 2s infinite 0.5s;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .prize-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 3px dashed #ffd700;
+        }
+
+        .fake-button {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .fake-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
+        }
+
+        .fake-button:active {
+            transform: translateY(-1px);
+        }
+
+        .warning-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .warning-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .warning-icon {
+            font-size: 60px;
+            color: #ff4757;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+
+        .explanation {
+            background: #e3f2fd;
+            padding: 30px;
+            margin-top: 20px;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .explanation h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+
+        .explanation ul {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>¡FELICIDADES!</h1>
+            <div class="subtitle">¡Has sido seleccionado para ganar un premio increíble!</div>
+        </div>
+        
+        <div class="content">
+            <div class="prize-section">
+                <h2 style="color: #ffd700; margin: 0;">🏆 PREMIO ESPECIAL 🏆</h2>
+                <p style="font-size: 1.3em; margin: 15px 0;">
+                    ¡iPhone 15 Pro Max completamente GRATIS!
+                </p>
+                <p style="color: #666;">
+                    Solo necesitas hacer clic en el botón de abajo para reclamar tu premio.
+                    <br><strong>¡Oferta limitada - Solo quedan 3 premios!</strong>
+                </p>
+            </div>
+            
+            <button class="fake-button pulse" onclick="showDemo()">
+                🎁 ¡RECLAMAR MI PREMIO AHORA! 🎁
+            </button>
+            
+            <p style="color: #999; font-size: 0.9em; margin-top: 20px;">
+                * No se requiere información personal<br>
+                * Completamente gratis<br>
+                * Entrega inmediata
+            </p>
+        </div>
+    </div>
+
+    <!-- Overlay de advertencia -->
+    <div id="warningOverlay" class="warning-overlay">
+        <div class="warning-content">
+            <div class="warning-icon">⚠️</div>
+            <h2 style="color: #ff4757; margin: 0;">¡DEMOSTRACIÓN DE CLICKJACKING!</h2>
+            <p style="margin: 20px 0; line-height: 1.6;">
+                <strong>¡Acabas de ser víctima de una demostración de clickjacking!</strong>
+                <br><br>
+                En un ataque real, tu clic podría haber:
+            </p>
+            <ul style="text-align: left; color: #555;">
+                <li>Publicado algo en tus redes sociales</li>
+                <li>Dado "me gusta" a una página</li>
+                <li>Autorizado permisos a una aplicación</li>
+                <li>Transferido dinero</li>
+                <li>Cambiado configuraciones de privacidad</li>
+            </ul>
+            <button class="close-btn" onclick="closeDemo()">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Explicación educativa -->
+    <div class="container" style="margin-top: 30px;">
+        <div class="explanation">
+            <h3>¿Qué es el Clickjacking?</h3>
+            <p>El clickjacking es una técnica de ataque donde se engaña al usuario para que haga clic en algo diferente a lo que percibe, típicamente mediante:</p>
+            <ul>
+                <li><strong>Capas invisibles:</strong> Se superpone un iframe transparente sobre botones legítimos</li>
+                <li><strong>Ingeniería social:</strong> Se usan ofertas atractivas o urgentes para motivar el clic</li>
+                <li><strong>Diseño engañoso:</strong> Se imita la apariencia de sitios confiables</li>
+            </ul>
+            
+            <h3>¿Cómo protegerse?</h3>
+            <ul>
+                <li>Usar navegadores actualizados con protecciones anti-clickjacking</li>
+                <li>Ser escéptico ante ofertas "demasiado buenas para ser verdad"</li>
+                <li>Verificar la URL antes de hacer clic en botones importantes</li>
+                <li>Los desarrolladores deben implementar X-Frame-Options y CSP</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showDemo() {
+            document.getElementById('warningOverlay').style.display = 'block';
+        }
+        
+        function closeDemo() {
+            document.getElementById('warningOverlay').style.display = 'none';
+        }
+        
+        // Prevenir clic derecho para la demo
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
